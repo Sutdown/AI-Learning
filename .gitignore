@@ -1,0 +1,3 @@
+agent/.env
+.venv/*
+.idea/*
