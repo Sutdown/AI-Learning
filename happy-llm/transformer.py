@@ -253,11 +253,11 @@ class Transformer(nn.Module):
         assert args.block_size is not None
         self.args = args
         self.transformer = nn.ModuleDict(dict(
-            wte=nn.Embedding(args.vocab_size, args.n_embd),
-            wpe=PositionalEncoding(args),
-            drop=nn.Dropout(args.dropout),
-            encoder=Encoder(args),
-            decoder=Decoder(args),
+            wte=nn.Embedding(args.vocab_size, args.n_embd), # 词嵌入
+            wpe=PositionalEncoding(args), # 位置编码
+            drop=nn.Dropout(args.dropout), # dropout
+            encoder=Encoder(args), # 编码器
+            decoder=Decoder(args), # 解码器
         ))
         # 最后的线性层，输入是 n_embd，输出是词表大小
         self.lm_head = nn.Linear(args.n_embd, args.vocab_size, bias=False)
@@ -299,10 +299,10 @@ class Transformer(nn.Module):
 
         # 通过 self.transformer
         # 首先将输入 idx 通过 Embedding 层，得到维度为 (batch size, sequence length, n_embd)
-        print("idx", idx.size())
+        print("idx：", idx.size())
         # 通过 Embedding 层
         tok_emb = self.transformer.wte(idx)
-        print("tok_emb", tok_emb.size())
+        print("tok_emb：", tok_emb.size())
         # 然后通过位置编码
         pos_emb = self.transformer.wpe(tok_emb)
         # 再进行 Dropout
@@ -351,9 +351,14 @@ def main():
     """
     输入 token 
     → 嵌入层 (Embedding)
+        --- 将每个token ID映射成一个高维向量
     → 位置编码 (Positional Encoding)
-    → 多层自注意力 + 前馈网络 (Transformer Blocks)
+        --- 增加序列顺序感
+    → 多层自注意力 + 前馈网络 (Transformer Blocks) 
+        --- 多层自注意力：理解词和词之间的关系
+        --- 前馈网络：一般由两层线性+激活函数，增强模型表达能力
     → 线性层映射到 vocab_size 维度
+        --- 映射回词表维度
     → 输出 logits
     """
     logits, loss = transformer.forward(inputs_id)
