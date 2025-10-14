@@ -82,7 +82,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("ai", "{agent_scratchpad}")                       # Agent思考过程（自动填充）
 ])
 
-"""agent"""
+"""trip_agent"""
 agent = initialize_agent(
     tools=tools,
     llm=llm,
