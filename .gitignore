@@ -1,3 +1,4 @@
-proj/**/.env
+proj/ask_question/.env
+proj/trip_agent/.env
 .venv/*
 .idea/*
