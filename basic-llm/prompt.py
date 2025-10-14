@@ -1,16 +1,20 @@
-from tool import get_completion
+import openai
 
-text = f"""
-您应该提供尽可能清晰、具体的指示，以表达您希望模型执行的任务。\
-这将引导模型朝向所需的输出，并降低收到无关或不正确响应的可能性。\
-不要将写清晰的提示词与写简短的提示词混淆。\
-在许多情况下，更长的提示词可以为模型提供更多的清晰度和上下文信息，从而导致更详细和相关的输出。
-"""
-# 需要总结的文本内容
-prompt = f"""
-把用三个反引号括起来的文本总结成一句话。
-```{text}```
-"""
-# 指令内容，使用 ``` 来分隔指令和待总结的内容
-response = get_completion(prompt)
-print(response)
+# 下文第一个函数即tool工具包中的同名函数，此处展示出来以便于读者对比
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0, # 控制模型输出的随机程度
+    )
+    return response.choices[0].message["content"]
+
+def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=temperature, # 控制模型输出的随机程度
+    )
+#     print(str(response.choices[0].message))
+    return response.choices[0].message["content"]
